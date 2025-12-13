@@ -1,14 +1,40 @@
-export default function NewPostPage() {
+import FormSubmission from "@/components/form-submit";
+import { getPosts, storePost } from "@/lib/posts";
+import { redirect } from "next/navigation";
 
-function getPostData(){
-  
-}
+export default  function NewPostPage() {
 
+
+  async function  getPostData(formData) {
+  "use server";
+    const title = formData.get("title");
+    const image = formData.get("image");
+    const content = formData.get("content");
+
+
+ 
+
+    let post = {
+      imageUrl: "",
+      title,
+      content,
+      userId: 1
+    }
+
+      const posts = await getPosts();
+      
+    console.log(posts);
+      
+
+   await storePost(post)
+
+    redirect("/feed")
+  }
 
   return (
     <>
       <h1>Create a new post</h1>
-      <form>
+      <form action={getPostData}>
         <p className="form-control">
           <label htmlFor="title">Title</label>
           <input type="text" id="title" name="title" />
@@ -27,8 +53,7 @@ function getPostData(){
           <textarea id="content" name="content" rows="5" />
         </p>
         <p className="form-actions">
-          <button type="reset">Reset</button>
-          <button>Create Post</button>
+          <FormSubmission></FormSubmission>
         </p>
       </form>
     </>
