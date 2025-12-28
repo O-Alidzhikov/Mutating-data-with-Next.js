@@ -1,5 +1,6 @@
 "use server";
 
+import { uploadImage } from "@/lib/cloudinary";
 import { storePost, updatePostLikeStatus } from "@/lib/posts";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -11,8 +12,18 @@ export async function getPostData(prevState, formData) {
     const content = formData.get("content");
     let errors = []
 
+    let imageUrl
+  try{
+    imageUrl = await uploadImage(image);
+  }catch(error){
+    throw new Error(
+     "Something went wrong"
+    )
+  }
+   
+
     let post = {
-      imageUrl: "",
+      imageUrl: imageUrl,
       title,
       content,
       userId: 1,
@@ -37,6 +48,7 @@ export async function getPostData(prevState, formData) {
     await storePost(post);
 
     revalidatePath("/", "layout")
+    console.log("we have revalidated the Path")
     redirect("/feed");
   }
 

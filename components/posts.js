@@ -4,12 +4,13 @@ import { formatDate } from "@/lib/format";
 import LikeButton from "./like-icon";
 import togglePostLike from "@/actions/actions";
 import { useOptimistic } from "react";
+import Image from "next/image";
 
 function Post({ post, updatePost }) {
   return (
     <article className="post">
       <div className="post-image">
-        <img src={post.image} alt={post.title} />
+        <Image src={post.image}  fill alt={post.title} />
       </div>
       <div className="post-content">
         <header>
